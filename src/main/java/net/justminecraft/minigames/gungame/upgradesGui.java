@@ -1,4 +1,4 @@
-package main.java.net.justminecraft.minigames.gungame;
+package net.justminecraft.minigames.gungame;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

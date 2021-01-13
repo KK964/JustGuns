@@ -1,4 +1,4 @@
-package main.java.net.justminecraft.minigames.gungame;
+package net.justminecraft.minigames.gungame;
 
 import net.justminecraft.minigames.minigamecore.Game;
 import net.justminecraft.minigames.minigamecore.MG;
