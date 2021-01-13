@@ -24,9 +24,25 @@ import java.util.List;
 
 public class JustGuns extends Minigame implements Listener {
 
+    /*
+      * Configs
+    */
+
+    int MIN_PLAYERS;
+    int MAX_PLAYERS;
+
+    int DEFAULT_DAMAGE;
+    int DEFAULT_RANGE;
+
+    int RANGE_MULTIPLIER;
+
+    int WIN_POINTS;
+    int DEATH_POINTS;
+
     upgradesGui upgradesGui = new upgradesGui();
 
     public void onEnable() {
+        initConfigs();
         MG.core().registerMinigame(this);
         getServer().getPluginManager().registerEvents(this,this);
         getLogger().info("JustGuns Enabled");
@@ -38,12 +54,12 @@ public class JustGuns extends Minigame implements Listener {
 
     @Override
     public int getMaxPlayers() {
-        return 4;
+        return MAX_PLAYERS;
     }
 
     @Override
     public int getMinPlayers() {
-        return 2;
+        return MIN_PLAYERS;
     }
 
     @Override
@@ -67,7 +83,7 @@ public class JustGuns extends Minigame implements Listener {
                     loc = loc.add(loc.getDirection().getX(),loc.getDirection().getY()+yAdd,loc.getDirection().getZ());
 
                     int dmg = getDamage(e.getItem());
-                    int range = getRange(e.getItem()) * 100;
+                    int range = getRange(e.getItem()) * RANGE_MULTIPLIER;
 
                     for(int i = 0; i < range; i++) { //total distance travel
                         loc = loc.add(loc.getDirection().getX()/1.5, loc.getDirection().getY()/1.5, loc.getDirection().getZ()/1.5);
@@ -113,15 +129,15 @@ public class JustGuns extends Minigame implements Listener {
         JustGunsGame g = (JustGunsGame) game;
 
         for(Player p : g.players) {
-            giveGun(p, 1, 1);
+            giveGun(p, DEFAULT_DAMAGE, DEFAULT_RANGE);
             giveUpgrade(p);
         }
     }
 
     @Override
     public void generateWorld(Game g, WorldBuffer w) {
-        g.moneyPerDeath = 5;
-        g.moneyPerWin= 30;
+        g.moneyPerDeath = DEATH_POINTS;
+        g.moneyPerWin= WIN_POINTS;
         g.disableBlockBreaking = true;
         g.disableBlockPlacing = true;
         g.disableHunger = true;
@@ -232,4 +248,21 @@ public class JustGuns extends Minigame implements Listener {
         p.closeInventory();
         upgradesGui.openInventory(p);
     }
+
+    // Other
+
+    private void initConfigs() {
+        saveDefaultConfig();
+
+        MIN_PLAYERS = this.getConfig().getInt("minPlayers");
+        MAX_PLAYERS = this.getConfig().getInt("maxPlayers");
+
+        WIN_POINTS = this.getConfig().getInt("winPoints");
+        DEATH_POINTS = this.getConfig().getInt("deathPoints");
+
+        DEFAULT_DAMAGE = this.getConfig().getInt("defaultDmg");
+        DEFAULT_RANGE = this.getConfig().getInt("defaultRange");
+        RANGE_MULTIPLIER = this.getConfig().getInt("rangeMultiplier");
+    }
+
 }
