@@ -1,0 +1,26 @@
+# Configs for Just Guns
+
+## Game Config
+
+### Players
+
+minPlayers: 2
+maxPlayers: 10
+
+
+### Points
+
+winPoints: 50
+deathPoints: 10
+
+
+## Gun Configs
+
+### Default
+defaultDmg: 1
+defaultRange: 1
+
+
+### Multipliers
+
+rangeMultiplier: 20
