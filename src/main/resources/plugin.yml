@@ -1,0 +1,6 @@
+name: ${project.name}
+version: ${project.version}
+description: ${project.description}
+main: main.java.net.justminecraft.minigames.gungame.JustGuns
+author: KK964
+depend: [MinigameCore]
