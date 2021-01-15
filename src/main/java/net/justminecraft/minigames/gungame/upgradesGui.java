@@ -14,7 +14,7 @@ import java.util.List;
 
 public class upgradesGui implements Listener {
 
-    JustGuns justGuns = new JustGuns();
+    JustGuns justGuns;
 
     public Inventory inv;
 
