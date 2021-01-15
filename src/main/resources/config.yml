@@ -19,6 +19,8 @@ deathPoints: 10
 ### Default
 defaultDmg: 1
 defaultRange: 1
+maxDmg: 5
+maxRange: 3
 
 
 ### Multipliers

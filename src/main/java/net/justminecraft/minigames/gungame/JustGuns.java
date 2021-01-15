@@ -33,6 +33,8 @@ public class JustGuns extends Minigame implements Listener {
 
     int DEFAULT_DAMAGE;
     int DEFAULT_RANGE;
+    public int MAX_DAMAGE;
+    public int MAX_RANGE;
 
     int RANGE_MULTIPLIER;
 
@@ -262,6 +264,9 @@ public class JustGuns extends Minigame implements Listener {
 
         DEFAULT_DAMAGE = this.getConfig().getInt("defaultDmg");
         DEFAULT_RANGE = this.getConfig().getInt("defaultRange");
+        MAX_DAMAGE = this.getConfig().getInt("maxDmg");
+        MAX_RANGE = this.getConfig().getInt("maxRange");
+
         RANGE_MULTIPLIER = this.getConfig().getInt("rangeMultiplier");
     }
 

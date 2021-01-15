@@ -72,10 +72,10 @@ public class upgradesGui implements Listener {
     public boolean isMax(String type, int level) {
         boolean res = false;
             if(type == "dmg") {
-                if(level >= 5) res = true;
+                if(level >= justGuns.MAX_DAMAGE) res = true;
             }
             if(type == "range") {
-                if(level >= 3) res = true;
+                if(level >= justGuns.MAX_RANGE) res = true;
             }
         return res;
     }
