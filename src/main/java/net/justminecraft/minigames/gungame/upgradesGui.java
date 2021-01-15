@@ -13,6 +13,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class upgradesGui implements Listener {
+
+    JustGuns justGuns = new JustGuns();
+
     public Inventory inv;
 
     public upgradesGui() {
@@ -20,10 +23,10 @@ public class upgradesGui implements Listener {
     }
 
     private void initializeItems(Player p) {
-        inv.setItem(0, createGuiItemI(getItemType("dmg", getDamage(invItem(p))), ChatColor.RED + "Up Damage", ChatColor.AQUA + "Current Damage: " + getDamage(invItem(p)), ChatColor.AQUA + loreTwo("dmg", getDamage(invItem(p)))));
+        inv.setItem(0, createGuiItemI(getItemType("dmg", justGuns.getDamage(invItem(p))), ChatColor.RED + "Up Damage", ChatColor.AQUA + "Current Damage: " + justGuns.getDamage(invItem(p)), ChatColor.AQUA + loreTwo("dmg", justGuns.getDamage(invItem(p)))));
         // set 0 with upgrade damage
 
-        inv.setItem(4, createGuiItemI(getItemType("range", getRange(invItem(p))), ChatColor.RED + "Up Range", ChatColor.AQUA + "Current Range: " + getRange(invItem(p)), ChatColor.AQUA + loreTwo("range", getRange(invItem(p)))));
+        inv.setItem(4, createGuiItemI(getItemType("range", justGuns.getRange(invItem(p))), ChatColor.RED + "Up Range", ChatColor.AQUA + "Current Range: " + justGuns.getRange(invItem(p)), ChatColor.AQUA + loreTwo("range", justGuns.getRange(invItem(p)))));
         // set 4 with upgrade range
 
         /*
@@ -35,23 +38,6 @@ public class upgradesGui implements Listener {
 
     public ItemStack invItem(Player p) {
         return p.getInventory().getItem(0);
-    }
-
-    public String[] getLore(ItemStack item) {
-        List<String> lore = item.getItemMeta().getLore();
-        String[] loreArray = new String[lore.size()];
-        loreArray = lore.toArray(loreArray);
-        return loreArray;
-    }
-    public int getDamage(ItemStack item) {
-        String[] loreArray = getLore(item);
-        String[] dmg = loreArray[0].split(" ");
-        return Integer.parseInt(dmg[1]);
-    }
-    public int getRange(ItemStack item) {
-        String[] loreArray = getLore(item);
-        String[] range = loreArray[1].split(" ");
-        return Integer.parseInt(range[1]);
     }
 
     public ItemStack getItemType(String type, int level) {
