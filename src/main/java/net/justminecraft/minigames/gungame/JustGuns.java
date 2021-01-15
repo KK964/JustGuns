@@ -24,22 +24,18 @@ import java.util.List;
 
 public class JustGuns extends Minigame implements Listener {
 
-    /*
-      * Configs
-    */
+    public int MIN_PLAYERS;
+    public int MAX_PLAYERS;
 
-    int MIN_PLAYERS;
-    int MAX_PLAYERS;
-
-    int DEFAULT_DAMAGE;
-    int DEFAULT_RANGE;
+    public int DEFAULT_DAMAGE;
+    public int DEFAULT_RANGE;
     public int MAX_DAMAGE;
     public int MAX_RANGE;
 
-    int RANGE_MULTIPLIER;
+    public int RANGE_MULTIPLIER;
 
-    int WIN_POINTS;
-    int DEATH_POINTS;
+    public int WIN_POINTS;
+    public int DEATH_POINTS;
 
     upgradesGui upgradesGui = new upgradesGui();
 
