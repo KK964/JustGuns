@@ -1,17 +1,28 @@
 package net.justminecraft.minigames.gungame;
 
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import net.justminecraft.minigames.minigamecore.Game;
+import net.justminecraft.minigames.minigamecore.MG;
 import net.justminecraft.minigames.minigamecore.Minigame;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Scoreboard;
+
+import java.util.HashMap;
 
 public class JustGunsGame extends Game {
     public int taskId = 0;
+    private JustGuns justguns;
+
     Scoreboard scoreboard;
     HashMap<Player, Integer> playerScore = new HashMap<>();
     HashMap<Player, Integer> killStreak = new HashMap<>();
     HashMap<Player, Integer> playerKills = new HashMap<>();
 
     public JustGunsGame(Minigame mg) {
-        super(mg);
+        super(mg, false);
         justguns = (JustGuns) mg;
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
     }
