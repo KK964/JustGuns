@@ -41,6 +41,7 @@ public class JustGuns extends Minigame implements Listener {
     public int DEATH_POINTS;
 
     upgradesGui upgradesGui = new upgradesGui();
+    public int RESPAWN_TIME;
 
     public void onEnable() {
         initConfigs();
@@ -294,6 +295,8 @@ public class JustGuns extends Minigame implements Listener {
         MAX_RANGE = this.getConfig().getInt("maxRange");
 
         RANGE_MULTIPLIER = this.getConfig().getInt("rangeMultiplier");
+
+        RESPAWN_TIME = this.getConfig().getInt("respawnTime");
     }
 
 }
