@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -18,6 +19,8 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
 
 import java.util.Arrays;
 import java.util.List;
@@ -107,6 +110,18 @@ public class JustGuns extends Minigame implements Listener {
     }
 
     @EventHandler
+    public void entityKill(EntityDeathEvent e) {
+        LivingEntity entity = e.getEntity();
+        Player p = entity.getKiller();
+        Game g = MG.core().getGame(p);
+        if(g != null && g.minigame == this) {
+            JustGunsGame jg = (JustGunsGame) g;
+            jg.playerKills.replace(p, jg.playerKills.get(p) + 1);
+            jg.updateScore(p);
+        }
+    }
+
+    @EventHandler
     public void dropHandler(PlayerDropItemEvent e) {
         Player p = e.getPlayer();
         Game g = MG.core().getGame(p);
@@ -125,10 +140,25 @@ public class JustGuns extends Minigame implements Listener {
     @Override
     public void startGame(Game game) {
         JustGunsGame g = (JustGunsGame) game;
+        g.world.setDifficulty(Difficulty.PEACEFUL);
+        g.world.setSpawnLocation(0, 64, 0);
+        g.world.setGameRuleValue("naturalRegeneration", "false");
+
+        Objective kills = g.scoreboard.registerNewObjective("kills", "dummy");
+        kills.setDisplayName(ChatColor.YELLOW + ChatColor.BOLD.toString() + "GUNS");
+        kills.setDisplaySlot(DisplaySlot.SIDEBAR);
+
+        kills.getScore("  ").setScore(5);
+        kills.getScore(ChatColor.GRAY + ChatColor.UNDERLINE.toString() + "Kills:").setScore(4);
+        kills.getScore(" ").setScore(2);
+        kills.getScore(ChatColor.YELLOW + "justminecraft.net").setScore(1);
 
         for(Player p : g.players) {
+            g.playerKills.put(p, 0);
+            g.updateScore(p);
             giveGun(p, DEFAULT_DAMAGE, DEFAULT_RANGE);
             giveUpgrade(p);
+            p.setScoreboard(g.scoreboard);
         }
     }
 
