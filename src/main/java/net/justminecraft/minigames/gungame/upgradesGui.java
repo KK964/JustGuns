@@ -14,19 +14,20 @@ import java.util.List;
 
 public class upgradesGui implements Listener {
 
-    JustGuns justGuns;
+    private final JustGuns plugin;
 
     public Inventory inv;
 
-    public upgradesGui() {
+    public upgradesGui(JustGuns plugin) {
+        this.plugin = plugin;
         inv = Bukkit.createInventory(null, 9, ChatColor.GOLD + "Upgrades!");
     }
 
     private void initializeItems(Player p) {
-        inv.setItem(0, createGuiItemI(getItemType("dmg", justGuns.getDamage(invItem(p))), ChatColor.RED + "Up Damage", ChatColor.AQUA + "Current Damage: " + justGuns.getDamage(invItem(p)), ChatColor.AQUA + loreTwo("dmg", justGuns.getDamage(invItem(p)))));
+        inv.setItem(0, createGuiItemI(getItemType("dmg", plugin.getDamage(invItem(p))), ChatColor.RED + "Up Damage", ChatColor.AQUA + "Current Damage: " + plugin.getDamage(invItem(p)), ChatColor.AQUA + loreTwo("dmg", plugin.getDamage(invItem(p)))));
         // set 0 with upgrade damage
 
-        inv.setItem(4, createGuiItemI(getItemType("range", justGuns.getRange(invItem(p))), ChatColor.RED + "Up Range", ChatColor.AQUA + "Current Range: " + justGuns.getRange(invItem(p)), ChatColor.AQUA + loreTwo("range", justGuns.getRange(invItem(p)))));
+        inv.setItem(4, createGuiItemI(getItemType("range", plugin.getRange(invItem(p))), ChatColor.RED + "Up Range", ChatColor.AQUA + "Current Range: " + plugin.getRange(invItem(p)), ChatColor.AQUA + loreTwo("range", plugin.getRange(invItem(p)))));
         // set 4 with upgrade range
 
         /*
@@ -58,10 +59,10 @@ public class upgradesGui implements Listener {
     public boolean isMax(String type, int level) {
         boolean res = false;
             if(type == "dmg") {
-                if(level >= justGuns.MAX_DAMAGE) res = true;
+                if(level >= plugin.MAX_DAMAGE) res = true;
             }
             if(type == "range") {
-                if(level >= justGuns.MAX_RANGE) res = true;
+                if(level >= plugin.MAX_RANGE) res = true;
             }
         return res;
     }
