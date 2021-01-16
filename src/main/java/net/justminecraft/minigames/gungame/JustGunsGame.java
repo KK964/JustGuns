@@ -6,9 +6,12 @@ import net.justminecraft.minigames.minigamecore.MG;
 import net.justminecraft.minigames.minigamecore.Minigame;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 
@@ -25,6 +28,18 @@ public class JustGunsGame extends Game {
         super(mg, false);
         justguns = (JustGuns) mg;
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+    }
+
+    public void onPlayerDeath(Player p) {
+        p.setVelocity(new Vector(0, 0, 0));
+        p.setHealth(20);
+        p.setFallDistance(0);
+        p.setGameMode(GameMode.SPECTATOR);
+        new PlayerRespawn((JustGuns) minigame, p);
+
+        if (p.getLocation().getY() < 30) {
+            p.teleport(new Location(p.getWorld(), 20, 90, 20, 135, 45));
+        }
     }
 
     public  void updateScore(Player p) {
