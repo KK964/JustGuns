@@ -9,9 +9,11 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -21,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.util.Vector;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,8 +43,9 @@ public class JustGuns extends Minigame implements Listener {
     public int WIN_POINTS;
     public int DEATH_POINTS;
 
-    upgradesGui upgradesGui = new upgradesGui();
     public int RESPAWN_TIME;
+
+    upgradesGui upgradesGui = new upgradesGui(this);
 
     public void onEnable() {
         initConfigs();
@@ -122,6 +126,16 @@ public class JustGuns extends Minigame implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerDeath(PlayerDeathEvent e) {
+        Player p = e.getEntity();
+        Game g = MG.core().getGame(p);
+        if (g != null && g.minigame == this) {
+            g.broadcastRaw(e.getDeathMessage());
+            p.closeInventory();
+        }
+    }
+
     @EventHandler
     public void dropHandler(PlayerDropItemEvent e) {
         Player p = e.getPlayer();
@@ -144,6 +158,7 @@ public class JustGuns extends Minigame implements Listener {
         g.world.setDifficulty(Difficulty.PEACEFUL);
         g.world.setSpawnLocation(0, 64, 0);
         g.world.setGameRuleValue("naturalRegeneration", "false");
+        g.world.setGameRuleValue("keepInventory", "true");
 
         Objective kills = g.scoreboard.registerNewObjective("kills", "dummy");
         kills.setDisplayName(ChatColor.YELLOW + ChatColor.BOLD.toString() + "GUNS");
@@ -160,6 +175,7 @@ public class JustGuns extends Minigame implements Listener {
             giveGun(p, DEFAULT_DAMAGE, DEFAULT_RANGE);
             giveUpgrade(p);
             p.setScoreboard(g.scoreboard);
+            p.teleport(new Location(g.world, 0, 64, 0));
         }
     }
 
@@ -170,7 +186,6 @@ public class JustGuns extends Minigame implements Listener {
         g.disableBlockBreaking = true;
         g.disableBlockPlacing = true;
         g.disableHunger = true;
-
         //generate world with schem and barriers
     }
 
@@ -260,7 +275,7 @@ public class JustGuns extends Minigame implements Listener {
         int range = getRange(gun);
         p.getInventory().setItem(0, new ItemStack(Material.AIR));
         giveGun(p, dmg, range);
-        p.sendMessage(ChatColor.GREEN + "Upgraded Your Damage to " + ChatColor.DARK_GREEN + dmg + ChatColor.GREEN + " Damage and " + ChatColor.DARK_GREEN + range + ChatColor.GREEN + " Range.");
+        p.sendMessage(ChatColor.GREEN + "Upgraded Your Gun to " + ChatColor.DARK_GREEN + dmg + ChatColor.GREEN + " Damage and " + ChatColor.DARK_GREEN + range + ChatColor.GREEN + " Range.");
         openUpgradesInventory(p);
     }
     public void addRange(Player p) {
@@ -269,7 +284,7 @@ public class JustGuns extends Minigame implements Listener {
         int range = getRange(gun) + 1;
         p.getInventory().setItem(0, new ItemStack(Material.AIR));
         giveGun(p, dmg, range);
-        p.sendMessage(ChatColor.GREEN + "Upgraded Your Damage to " + ChatColor.DARK_GREEN + dmg + ChatColor.GREEN + " Damage and " + ChatColor.DARK_GREEN + range + ChatColor.GREEN + " Range.");
+        p.sendMessage(ChatColor.GREEN + "Upgraded Your Gun to " + ChatColor.DARK_GREEN + dmg + ChatColor.GREEN + " Damage and " + ChatColor.DARK_GREEN + range + ChatColor.GREEN + " Range.");
         openUpgradesInventory(p);
     }
 
