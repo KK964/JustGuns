@@ -24,10 +24,10 @@ public class upgradesGui implements Listener {
     }
 
     private void initializeItems(Player p) {
-        inv.setItem(0, createGuiItemI(getItemType("dmg", plugin.getDamage(invItem(p))), ChatColor.RED + "Up Damage", ChatColor.AQUA + "Current Damage: " + plugin.getDamage(invItem(p)), ChatColor.AQUA + loreTwo("dmg", plugin.getDamage(invItem(p)))));
+        inv.setItem(0, createGuiItemI(getItemType("dmg", getDamage(invItem(p))), ChatColor.RED + "Up Damage", ChatColor.AQUA + "Current Damage: " + getDamage(invItem(p)), ChatColor.AQUA + loreTwo("dmg", getDamage(invItem(p)))));
         // set 0 with upgrade damage
 
-        inv.setItem(4, createGuiItemI(getItemType("range", plugin.getRange(invItem(p))), ChatColor.RED + "Up Range", ChatColor.AQUA + "Current Range: " + plugin.getRange(invItem(p)), ChatColor.AQUA + loreTwo("range", plugin.getRange(invItem(p)))));
+        inv.setItem(4, createGuiItemI(getItemType("range", getRange(invItem(p))), ChatColor.RED + "Up Range", ChatColor.AQUA + "Current Range: " + getRange(invItem(p)), ChatColor.AQUA + loreTwo("range", getRange(invItem(p)))));
         // set 4 with upgrade range
 
         /*
@@ -86,5 +86,22 @@ public class upgradesGui implements Listener {
     public void openInventory(final Player p) {
         initializeItems(p);
         p.openInventory(inv);
+    }
+
+    public String[] getLore(ItemStack item) {
+        List<String> lore = item.getItemMeta().getLore();
+        String[] loreArray = new String[lore.size()];
+        loreArray = lore.toArray(loreArray);
+        return loreArray;
+    }
+    public int getDamage(ItemStack item) {
+        String[] loreArray = getLore(item);
+        String[] dmg = loreArray[0].split(" ");
+        return Integer.parseInt(dmg[1]);
+    }
+    public int getRange(ItemStack item) {
+        String[] loreArray = getLore(item);
+        String[] range = loreArray[1].split(" ");
+        return Integer.parseInt(range[1]);
     }
 }
