@@ -88,8 +88,11 @@ public class JustGuns extends Minigame implements Listener {
                         yAdd = 1.50; //sneaking
                     loc = loc.add(loc.getDirection().getX(),loc.getDirection().getY()+yAdd,loc.getDirection().getZ());
 
-                    int dmg = getDamage(e.getItem());
-                    int range = getRange(e.getItem()) * RANGE_MULTIPLIER;
+                    int dmg = upgradesGui.getDamage(e.getItem());
+                    int range = upgradesGui.getRange(e.getItem()) * RANGE_MULTIPLIER;
+
+                    p.spigot().sendMessage();
+
 
                     for(int i = 0; i < range; i++) { //total distance travel
                         loc = loc.add(loc.getDirection().getX()/1.5, loc.getDirection().getY()/1.5, loc.getDirection().getZ()/1.5);
@@ -99,7 +102,12 @@ public class JustGuns extends Minigame implements Listener {
                         }
                         for(Entity ent : loc.getWorld().getNearbyEntities(loc, 0.2, 0.2, 0.2)) {
                             if(ent != p && ent.getType().isAlive()) {
-                                ((LivingEntity) ent).damage(dmg, p);
+                                if(ent instanceof Player) {
+                                    Player player = (Player) ent;
+                                    player.damage(dmg, p);
+                                } else {
+                                    ((LivingEntity) ent).damage(dmg, p);
+                                }
                                 i = range;
                                 break;
                             }
@@ -181,6 +189,7 @@ public class JustGuns extends Minigame implements Listener {
 
     @Override
     public void generateWorld(Game g, WorldBuffer w) {
+        g.disablePvP = false;
         g.moneyPerDeath = DEATH_POINTS;
         g.moneyPerWin= WIN_POINTS;
         g.disableBlockBreaking = true;
@@ -209,23 +218,6 @@ public class JustGuns extends Minigame implements Listener {
         upgradesMeta.setLore(loreList);
         upgrades.setItemMeta(upgradesMeta);
         p.getInventory().setItem(8, upgrades);
-    }
-
-    public String[] getLore(ItemStack item) {
-        List<String> lore = item.getItemMeta().getLore();
-        String[] loreArray = new String[lore.size()];
-        loreArray = lore.toArray(loreArray);
-        return loreArray;
-    }
-    public int getDamage(ItemStack item) {
-        String[] loreArray = getLore(item);
-        String[] dmg = loreArray[0].split(" ");
-        return Integer.parseInt(dmg[1]);
-    }
-    public int getRange(ItemStack item) {
-        String[] loreArray = getLore(item);
-        String[] range = loreArray[1].split(" ");
-        return Integer.parseInt(range[1]);
     }
 
     /*
@@ -271,8 +263,8 @@ public class JustGuns extends Minigame implements Listener {
 
     public void addDmg(Player p) {
         ItemStack gun = p.getInventory().getItem(0);
-        int dmg = getDamage(gun) + 1;
-        int range = getRange(gun);
+        int dmg = upgradesGui.getDamage(gun) + 1;
+        int range = upgradesGui.getRange(gun);
         p.getInventory().setItem(0, new ItemStack(Material.AIR));
         giveGun(p, dmg, range);
         p.sendMessage(ChatColor.GREEN + "Upgraded Your Gun to " + ChatColor.DARK_GREEN + dmg + ChatColor.GREEN + " Damage and " + ChatColor.DARK_GREEN + range + ChatColor.GREEN + " Range.");
@@ -280,8 +272,8 @@ public class JustGuns extends Minigame implements Listener {
     }
     public void addRange(Player p) {
         ItemStack gun = p.getInventory().getItem(0);
-        int dmg = getDamage(gun);
-        int range = getRange(gun) + 1;
+        int dmg = upgradesGui.getDamage(gun);
+        int range = upgradesGui.getRange(gun) + 1;
         p.getInventory().setItem(0, new ItemStack(Material.AIR));
         giveGun(p, dmg, range);
         p.sendMessage(ChatColor.GREEN + "Upgraded Your Gun to " + ChatColor.DARK_GREEN + dmg + ChatColor.GREEN + " Damage and " + ChatColor.DARK_GREEN + range + ChatColor.GREEN + " Range.");
