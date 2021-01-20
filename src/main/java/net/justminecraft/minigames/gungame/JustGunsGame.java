@@ -1,6 +1,5 @@
 package net.justminecraft.minigames.gungame;
 
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import net.justminecraft.minigames.minigamecore.Game;
 import net.justminecraft.minigames.minigamecore.MG;
 import net.justminecraft.minigames.minigamecore.Minigame;
@@ -12,7 +11,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.Vector;
+import org.json.simple.JSONObject;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 
 public class JustGunsGame extends Game {
