@@ -32,6 +32,29 @@ public class JustGunsGame extends Game {
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
     }
 
+    public String getMapSize(int p) {
+        if(p < 5) return "small";
+        if(p > 5) return "large";
+        return "small";
+    }
+
+    public String getRandomMap(Game game) {
+        ArrayList<String> maps = new ArrayList<>();
+        String size = getMapSize(game.players.size());
+        for(File fileEntry : JustGuns.SCHEMATIC_FOLDER.listFiles()) {
+            if(fileEntry.isFile()) {
+                String FileName = fileEntry.getName();
+                String regex = "(" + size + ")_\\w+\\.schematic";
+                Pattern p = Pattern.compile(regex);
+                Matcher m = p.matcher(FileName);
+                if(m.find()) {
+                    maps.add(FileName);
+                }
+            }
+        }
+        return maps.get((int) (Math.random() * maps.size()));
+    }
+
     public void onPlayerDeath(Player p) {
         p.setVelocity(new Vector(0, 0, 0));
         p.setHealth(20);

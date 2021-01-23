@@ -25,10 +25,14 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.util.Vector;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
 public class JustGuns extends Minigame implements Listener {
+
+    public static File DATA_FOLDER;
+    public static File SCHEMATIC_FOLDER;
 
     public int MIN_PLAYERS;
     public int MAX_PLAYERS;
@@ -48,6 +52,7 @@ public class JustGuns extends Minigame implements Listener {
     upgradesGui upgradesGui = new upgradesGui(this);
 
     public void onEnable() {
+        DATA_FOLDER = getDataFolder();
         initConfigs();
         MG.core().registerMinigame(this);
         getServer().getPluginManager().registerEvents(this,this);
@@ -178,7 +183,7 @@ public class JustGuns extends Minigame implements Listener {
         kills.getScore(ChatColor.YELLOW + "justminecraft.net").setScore(1);
 
         for(Player p : g.players) {
-            g.playerKills.put(p, 0);
+            g.setPlayer(p);
             g.updateScore(p);
             giveGun(p, DEFAULT_DAMAGE, DEFAULT_RANGE);
             giveUpgrade(p);
@@ -188,13 +193,20 @@ public class JustGuns extends Minigame implements Listener {
     }
 
     @Override
-    public void generateWorld(Game g, WorldBuffer w) {
+    public void generateWorld(Game game, WorldBuffer w) {
+        JustGunsGame g = (JustGunsGame) game;
+
+        String map = g.getRandomMap(game);
+
         g.disablePvP = false;
         g.moneyPerDeath = DEATH_POINTS;
         g.moneyPerWin= WIN_POINTS;
         g.disableBlockBreaking = true;
         g.disableBlockPlacing = true;
         g.disableHunger = true;
+        Map m = new Map();
+        Location l = new Location(g.world, 0, 64, 0);
+        m.placeSchematic(w, l, map);
         //generate world with schem and barriers
     }
 
@@ -289,6 +301,8 @@ public class JustGuns extends Minigame implements Listener {
 
     private void initConfigs() {
         saveDefaultConfig();
+        SCHEMATIC_FOLDER = new File (DATA_FOLDER.getPath() + System.getProperty("file.separator") + "schematics");
+        SCHEMATIC_FOLDER.mkdir();
 
         MIN_PLAYERS = this.getConfig().getInt("minPlayers");
         MAX_PLAYERS = this.getConfig().getInt("maxPlayers");
