@@ -98,26 +98,27 @@ public class JustGuns extends Minigame implements Listener {
                     if(p.isSneaking())
                         yAdd = 1.50; //sneaking
                     loc = loc.add(loc.getDirection().getX(),loc.getDirection().getY()+yAdd,loc.getDirection().getZ());
+                    if(loc.getBlock() == null || !loc.getBlock().getType().isSolid()) {
+                        int dmg = upgradesGui.getDamage(e.getItem());
+                        int range = upgradesGui.getRange(e.getItem()) * RANGE_MULTIPLIER;
 
-                    int dmg = upgradesGui.getDamage(e.getItem());
-                    int range = upgradesGui.getRange(e.getItem()) * RANGE_MULTIPLIER;
-
-                    for(int i = 0; i < range; i++) { //total distance travel
-                        loc = loc.add(loc.getDirection().getX()/1.5, loc.getDirection().getY()/1.5, loc.getDirection().getZ()/1.5);
-                        p.getWorld().spigot().playEffect(loc, Effect.FLAME, 1, 0, 0, 0 ,0, 0, 1, 100);
-                        if(loc.getBlock() != null && loc.getBlock().getType().isSolid()) {
-                            break;
-                        }
-                        for(Entity ent : loc.getWorld().getNearbyEntities(loc, 0.2, 0.2, 0.2)) {
-                            if(ent != p && ent.getType().isAlive()) {
-                                if(ent instanceof Player) {
-                                    Player player = (Player) ent;
-                                    player.damage(dmg, p);
-                                } else {
-                                    ((LivingEntity) ent).damage(dmg, p);
-                                }
-                                i = range;
+                        for(int i = 0; i < range; i++) { //total distance travel
+                            loc = loc.add(loc.getDirection().getX()/1.5, loc.getDirection().getY()/1.5, loc.getDirection().getZ()/1.5);
+                            p.getWorld().spigot().playEffect(loc, Effect.FLAME, 1, 0, 0, 0 ,0, 0, 1, 100);
+                            if(loc.getBlock() != null && loc.getBlock().getType().isSolid()) {
                                 break;
+                            }
+                            for(Entity ent : loc.getWorld().getNearbyEntities(loc, 0.2, 0.2, 0.2)) {
+                                if(ent != p && ent.getType().isAlive()) {
+                                    if(ent instanceof Player) {
+                                        Player player = (Player) ent;
+                                        player.damage(dmg, p);
+                                    } else {
+                                        ((LivingEntity) ent).damage(dmg, p);
+                                    }
+                                    i = range;
+                                    break;
+                                }
                             }
                         }
                     }
