@@ -13,11 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.Vector;
-import org.json.simple.JSONObject;
 
 import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -68,10 +65,49 @@ public class JustGunsGame extends Game {
         p.setGameMode(GameMode.SPECTATOR);
         resetKills(p);
         updateExperience(p);
-        new PlayerRespawn((JustGuns) minigame, p);
         if (p.getLocation().getY() < 30) {
             p.teleport(new Location(p.getWorld(), 0, 90, 0, 135, 45));
         }
+        if(isGameOver()) {
+            endGame();
+        } else {
+            new PlayerRespawn((JustGuns) minigame, p);
+        }
+    }
+
+    public boolean isGameOver() {
+        boolean over = false;
+        int killsNeeded = neededKills();
+        for(Player p : players) {
+            if(playerKills.get(p) >= killsNeeded) over = true;
+        }
+        return over;
+    }
+
+    public void endGame() {
+        Player winner = getWinner();
+        for(Player p : players) {
+            if(p != winner) {
+                playerLeave(p);
+            }
+        }
+        finishGame();
+    }
+
+    public Player getWinner() {
+        Player p = null;
+        int killsNeeded = neededKills();
+        for(Player player : players) {
+            if(playerKills.get(player) >= killsNeeded) p = player;
+        }
+        return p;
+    }
+
+    public int neededKills() {
+        int killsNeeded = 20;
+        int playersInt = players.size();
+        if(playersInt <= 2) killsNeeded = 10;
+        return killsNeeded;
     }
 
     public void updateScore(Player p) {
