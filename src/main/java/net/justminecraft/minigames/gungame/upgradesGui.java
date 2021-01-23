@@ -1,5 +1,7 @@
 package net.justminecraft.minigames.gungame;
 
+import net.justminecraft.minigames.minigamecore.Game;
+import net.justminecraft.minigames.minigamecore.MG;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -24,11 +26,14 @@ public class upgradesGui implements Listener {
     }
 
     private void initializeItems(Player p) {
-        inv.setItem(0, createGuiItemI(getItemType("dmg", getDamage(invItem(p))), ChatColor.RED + "Up Damage", ChatColor.AQUA + "Current Damage: " + getDamage(invItem(p)), ChatColor.AQUA + loreTwo("dmg", getDamage(invItem(p)))));
+        inv.setItem(0, createGuiItemI(getItemType("dmg", getDamage(invItem(p)), p), ChatColor.RED + "Up Damage", ChatColor.AQUA + "Current Damage: " + getDamage(invItem(p)), ChatColor.AQUA + loreTwo("dmg", getDamage(invItem(p)), p)));
         // set 0 with upgrade damage
 
-        inv.setItem(4, createGuiItemI(getItemType("range", getRange(invItem(p))), ChatColor.RED + "Up Range", ChatColor.AQUA + "Current Range: " + getRange(invItem(p)), ChatColor.AQUA + loreTwo("range", getRange(invItem(p)))));
+        inv.setItem(4, createGuiItemI(getItemType("range", getRange(invItem(p)), p), ChatColor.RED + "Up Range", ChatColor.AQUA + "Current Range: " + getRange(invItem(p)), ChatColor.AQUA + loreTwo("range", getRange(invItem(p)), p)));
         // set 4 with upgrade range
+
+        inv.setItem(8, createGuiItemM(Material.GOLD_NUGGET, ChatColor.GOLD + "Stats", ChatColor.GOLD + "Points: " + playerScore(p), ChatColor.RED + "Damage: " + getDamage(invItem(p)), ChatColor.AQUA + "Range: " + getRange(invItem(p))));
+        // set 8 with stats
 
         /*
           * | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | // 9
@@ -41,15 +46,20 @@ public class upgradesGui implements Listener {
         return p.getInventory().getItem(0);
     }
 
-    public ItemStack getItemType(String type, int level) {
+    public ItemStack getItemType(String type, int level, Player p) {
         short color = 5;
         boolean isMax = isMax(type, level);
         if(isMax) color = 14;
+        if(!canBuy(type,level,p)) color = 14;
         ItemStack res = new ItemStack(Material.STAINED_GLASS_PANE, 1, color);
         return res;
     }
-    public String loreTwo(String type, int level) {
-        String res = "Upgrade to level " + (level + 1);
+
+    public String loreTwo(String type, int level, Player p) {
+        String res = "Upgrade to level " + (level + 1) + " for " + itemCost(type, level);
+        if(!canBuy(type, level, p)) {
+            res = type + " costs too much!";
+        }
         if(isMax(type, level)) {
             res = type + " is maxed out!";
         }
@@ -65,6 +75,33 @@ public class upgradesGui implements Listener {
                 if(level >= plugin.MAX_RANGE) res = true;
             }
         return res;
+    }
+
+    public double itemCost(String type, int level) {
+        double cost = 0;
+        if(type == "dmg") {
+            cost = plugin.DAMAGE_BASE_COST;
+            cost = cost + (level * plugin.DAMAGE_UPGRADE_MULTIPLIER);
+        }
+        if(type == "range") {
+            cost = plugin.RANGE_BASE_COST;
+            cost = cost + (level * plugin.RANGE_UPGRADE_MULTIPLIER);
+        }
+        return cost;
+    }
+
+    public boolean canBuy(String type, int level, Player player) {
+        boolean res = false;
+        double playerScore = playerScore(player);
+        double itemCost = itemCost(type, level);
+        if(itemCost < playerScore) res = true;
+        return res;
+    }
+
+    public double playerScore(Player player) {
+        Game game = MG.core().getGame(player);
+        JustGunsGame g = (JustGunsGame) game;
+        return g.playerScore.get(player);
     }
 
     protected ItemStack createGuiItemM(final Material material, final String name, final String... lore) {
@@ -83,9 +120,13 @@ public class upgradesGui implements Listener {
         return item;
     }
 
-    public void openInventory(final Player p) {
+    public void openInventory(Player p) {
         initializeItems(p);
         p.openInventory(inv);
+    }
+
+    public void updateInventory(Player p) {
+        initializeItems(p);
     }
 
     public String[] getLore(ItemStack item) {

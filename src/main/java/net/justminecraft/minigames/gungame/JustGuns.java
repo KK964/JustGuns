@@ -138,8 +138,10 @@ public class JustGuns extends Minigame implements Listener {
         if(g != null && g.minigame == this) {
             JustGunsGame jg = (JustGunsGame) g;
             jg.playerKills.replace(p, jg.playerKills.get(p) + 1);
+            jg.addScore(p);
             jg.updateScore(p);
             jg.updateActionBar(p);
+            jg.addKillStreak(p);
         }
     }
 
@@ -148,6 +150,7 @@ public class JustGuns extends Minigame implements Listener {
         Player p = e.getEntity();
         Game g = MG.core().getGame(p);
         if (g != null && g.minigame == this) {
+            JustGunsGame jg = (JustGunsGame) g;
             g.broadcastRaw(e.getDeathMessage());
             p.closeInventory();
         }
@@ -192,6 +195,8 @@ public class JustGuns extends Minigame implements Listener {
             giveGun(p, DEFAULT_DAMAGE, DEFAULT_RANGE);
             giveUpgrade(p);
             p.setScoreboard(g.scoreboard);
+            p.setExp(0);
+            p.setLevel(0);
             p.teleport(new Location(g.world, 0, 64, 0));
         }
     }
@@ -251,7 +256,7 @@ public class JustGuns extends Minigame implements Listener {
         if (clickedItem == null || clickedItem.getType() == Material.AIR) return;
         if(clickedItem.getType() == Material.STAINED_GLASS_PANE && clickedItem.getDurability() == 14) {
             p.playSound(p.getLocation(), Sound.BURP, 100, 1);
-            p.sendMessage(ChatColor.RED + "That Upgrade is Maxed!");
+            p.sendMessage(ChatColor.RED + "You Cannot Buy That Upgrade!");
             return;
         }
         switch(e.getRawSlot()) {
@@ -278,22 +283,36 @@ public class JustGuns extends Minigame implements Listener {
     }
 
     public void addDmg(Player p) {
+        Game game = MG.core().getGame(p);
+        JustGunsGame g = (JustGunsGame) game;
         ItemStack gun = p.getInventory().getItem(0);
-        int dmg = upgradesGui.getDamage(gun) + 1;
+        int dmg = upgradesGui.getDamage(gun);
+        double score = g.playerScore.get(p);
+        score = score - upgradesGui.itemCost("dmg", dmg);
+        g.playerScore.replace(p, score);
+        g.updateExperience(p);
+        dmg = dmg + 1;
         int range = upgradesGui.getRange(gun);
         p.getInventory().setItem(0, new ItemStack(Material.AIR));
         giveGun(p, dmg, range);
         p.sendMessage(ChatColor.GREEN + "Upgraded Your Gun to " + ChatColor.DARK_GREEN + dmg + ChatColor.GREEN + " Damage and " + ChatColor.DARK_GREEN + range + ChatColor.GREEN + " Range.");
-        openUpgradesInventory(p);
+        upgradesGui.updateInventory(p);
     }
     public void addRange(Player p) {
+        Game game = MG.core().getGame(p);
+        JustGunsGame g = (JustGunsGame) game;
         ItemStack gun = p.getInventory().getItem(0);
         int dmg = upgradesGui.getDamage(gun);
-        int range = upgradesGui.getRange(gun) + 1;
+        int range = upgradesGui.getRange(gun);
+        double score = g.playerScore.get(p);
+        score = score - upgradesGui.itemCost("range", range);
+        g.playerScore.replace(p, score);
+        g.updateExperience(p);
+        range = range + 1;
         p.getInventory().setItem(0, new ItemStack(Material.AIR));
         giveGun(p, dmg, range);
         p.sendMessage(ChatColor.GREEN + "Upgraded Your Gun to " + ChatColor.DARK_GREEN + dmg + ChatColor.GREEN + " Damage and " + ChatColor.DARK_GREEN + range + ChatColor.GREEN + " Range.");
-        openUpgradesInventory(p);
+        upgradesGui.updateInventory(p);
     }
 
     public void openUpgradesInventory(Player p) {

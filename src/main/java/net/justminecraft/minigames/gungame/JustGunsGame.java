@@ -70,7 +70,7 @@ public class JustGunsGame extends Game {
         updateExperience(p);
         new PlayerRespawn((JustGuns) minigame, p);
         if (p.getLocation().getY() < 30) {
-            p.teleport(new Location(p.getWorld(), 20, 90, 20, 135, 45));
+            p.teleport(new Location(p.getWorld(), 0, 90, 0, 135, 45));
         }
     }
 
