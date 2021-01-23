@@ -26,9 +26,9 @@ maxRange: 3
 
 ### Upgrades
 baseDmgCost: 100
-dmgUpgradeMultiplier: 5
+dmgUpgradeMultiplier: 50
 baseRangeCost: 50
-rangeUpgradeMultiplier: 3
+rangeUpgradeMultiplier: 20
 
 ### Multipliers
 
