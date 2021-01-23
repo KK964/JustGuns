@@ -1,5 +1,7 @@
 package net.justminecraft.minigames.gungame;
 
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
+import net.justminecraft.minigames.minigamecore.ActionBar;
 import net.justminecraft.minigames.minigamecore.Game;
 import net.justminecraft.minigames.minigamecore.MG;
 import net.justminecraft.minigames.minigamecore.Minigame;
@@ -13,17 +15,21 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.Vector;
 import org.json.simple.JSONObject;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class JustGunsGame extends Game {
     public int taskId = 0;
     private JustGuns justguns;
 
     Scoreboard scoreboard;
-    HashMap<Player, Integer> playerScore = new HashMap<>();
-    HashMap<Player, Integer> killStreak = new HashMap<>();
+    HashMap<Player, Double> playerScore = new HashMap<>();
+    HashMap<Player, Double> killStreak = new HashMap<>();
     HashMap<Player, Integer> playerKills = new HashMap<>();
 
     public JustGunsGame(Minigame mg) {
@@ -60,14 +66,15 @@ public class JustGunsGame extends Game {
         p.setHealth(20);
         p.setFallDistance(0);
         p.setGameMode(GameMode.SPECTATOR);
+        resetKills(p);
+        updateExperience(p);
         new PlayerRespawn((JustGuns) minigame, p);
-
         if (p.getLocation().getY() < 30) {
             p.teleport(new Location(p.getWorld(), 20, 90, 20, 135, 45));
         }
     }
 
-    public  void updateScore(Player p) {
+    public void updateScore(Player p) {
         scoreboard.resetScores(ChatColor.RED + p.getName() + ": " + ChatColor.DARK_RED + (playerKills.get(p) - 1));
         scoreboard.resetScores(ChatColor.RED + p.getName() + ": " + ChatColor.DARK_RED + (playerKills.get(p)));
         Game g = MG.core().getGame(p);
@@ -76,5 +83,50 @@ public class JustGunsGame extends Game {
         } else {
             scoreboard.getObjective(DisplaySlot.SIDEBAR).getScore(ChatColor.RED + p.getName() + ": " + ChatColor.DARK_RED + "✗").setScore(3);
         }
+    }
+
+    public void updateActionBar(Player p) {
+        double KillSteak = killStreak.get(p);
+        double scoreMultiplier = getMultiplier(p);
+        ActionBar killStreakMulti = new ActionBar(ChatColor.GREEN + "Points Multiplier: " + ChatColor.UNDERLINE.toString() + ChatColor.DARK_GREEN + scoreMultiplier);
+        updateExperience(p);
+        killStreakMulti.send(p);
+    }
+
+    public void updateExperience(Player p) {
+        double points = playerScore.get(p);
+        points = (int) Math.round(points);
+        p.setLevel((int) points);
+    }
+
+    public double getMultiplier(Player p) {
+        double KillSteak = killStreak.get(p);
+        if(KillSteak == 0) return 1;
+        if(KillSteak > 9) return 2;
+        double multi = 1 + (KillSteak / 10);
+        return multi;
+    }
+
+    public void addScore(Player p) {
+        double score = playerScore.get(p);
+        double multiplier = getMultiplier(p);
+        double newScore = score + (100 * multiplier);
+        playerScore.replace(p, newScore);
+    }
+
+    public void setPlayer(Player p) {
+        playerKills.put(p, 0);
+        playerScore.put(p, Double.valueOf(0));
+        killStreak.put(p, Double.valueOf(0));
+    }
+
+    public void addKillStreak(Player p) {
+        double kills = killStreak.get(p);
+        kills = kills + 1;
+        killStreak.replace(p, kills);
+    }
+
+    public void resetKills(Player p) {
+        killStreak.replace(p, Double.valueOf(0));
     }
 }

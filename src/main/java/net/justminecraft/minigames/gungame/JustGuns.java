@@ -1,5 +1,6 @@
 package net.justminecraft.minigames.gungame;
 
+import net.justminecraft.minigames.minigamecore.ActionBar;
 import net.justminecraft.minigames.minigamecore.Game;
 import net.justminecraft.minigames.minigamecore.MG;
 import net.justminecraft.minigames.minigamecore.Minigame;
@@ -96,9 +97,6 @@ public class JustGuns extends Minigame implements Listener {
                     int dmg = upgradesGui.getDamage(e.getItem());
                     int range = upgradesGui.getRange(e.getItem()) * RANGE_MULTIPLIER;
 
-                    p.spigot().sendMessage();
-
-
                     for(int i = 0; i < range; i++) { //total distance travel
                         loc = loc.add(loc.getDirection().getX()/1.5, loc.getDirection().getY()/1.5, loc.getDirection().getZ()/1.5);
                         p.getWorld().spigot().playEffect(loc, Effect.FLAME, 1, 0, 0, 0 ,0, 0, 1, 100);
@@ -136,6 +134,7 @@ public class JustGuns extends Minigame implements Listener {
             JustGunsGame jg = (JustGunsGame) g;
             jg.playerKills.replace(p, jg.playerKills.get(p) + 1);
             jg.updateScore(p);
+            jg.updateActionBar(p);
         }
     }
 
