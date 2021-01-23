@@ -2,22 +2,24 @@
 
 ## Game Config
 
-### Players
+### Maps
+smallMap: 5 # if players <= smallMap use small maps else large
 
+### Win
+lessPlayers: 2
+lessPlayersKills: 10
+defaultKills: 20
+
+### Players
 minPlayers: 2
 maxPlayers: 10
-
-# in seconds.
-respawnTime: 5
+respawnTime: 5 # in seconds
 
 ### Points
-
 winPoints: 50
 deathPoints: 10
 
-
 ## Gun Configs
-
 ### Default
 defaultDmg: 1
 defaultRange: 1
@@ -26,10 +28,9 @@ maxRange: 3
 
 ### Upgrades
 baseDmgCost: 100
-dmgUpgradeMultiplier: 50
 baseRangeCost: 50
+dmgUpgradeMultiplier: 50 # How much more per lvl (base + (lvl * multi))
 rangeUpgradeMultiplier: 20
 
 ### Multipliers
-
 rangeMultiplier: 20

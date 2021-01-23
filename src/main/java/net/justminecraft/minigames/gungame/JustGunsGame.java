@@ -36,8 +36,8 @@ public class JustGunsGame extends Game {
     }
 
     public String getMapSize(int p) {
-        if(p < 5) return "small";
-        if(p > 5) return "large";
+        if(p < JustGuns.SMALL_MAP_PLAYERS) return "small";
+        if(p > JustGuns.SMALL_MAP_PLAYERS) return "large";
         return "small";
     }
 
@@ -104,9 +104,9 @@ public class JustGunsGame extends Game {
     }
 
     public int neededKills() {
-        int killsNeeded = 20;
+        int killsNeeded = JustGuns.WIN_DEFAULT_KILLS;
         int playersInt = players.size();
-        if(playersInt <= 2) killsNeeded = 10;
+        if(playersInt <= JustGuns.WIN_LESS_PLAYERS) killsNeeded = JustGuns.WIN_LESS_PLAYERS_KILLS;
         return killsNeeded;
     }
 

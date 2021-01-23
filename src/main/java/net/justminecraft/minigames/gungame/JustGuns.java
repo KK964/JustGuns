@@ -35,25 +35,31 @@ public class JustGuns extends Minigame implements Listener {
     public static File DATA_FOLDER;
     public static File SCHEMATIC_FOLDER;
 
-    public int MIN_PLAYERS;
-    public int MAX_PLAYERS;
+    public static int MIN_PLAYERS;
+    public static int MAX_PLAYERS;
 
-    public int DEFAULT_DAMAGE;
-    public int DEFAULT_RANGE;
-    public int MAX_DAMAGE;
-    public int MAX_RANGE;
+    public static int DEFAULT_DAMAGE;
+    public static int DEFAULT_RANGE;
+    public static int MAX_DAMAGE;
+    public static int MAX_RANGE;
 
-    public int DAMAGE_BASE_COST;
-    public int DAMAGE_UPGRADE_MULTIPLIER;
-    public int RANGE_BASE_COST;
-    public int RANGE_UPGRADE_MULTIPLIER;
+    public static int DAMAGE_BASE_COST;
+    public static int DAMAGE_UPGRADE_MULTIPLIER;
+    public static int RANGE_BASE_COST;
+    public static int RANGE_UPGRADE_MULTIPLIER;
 
-    public int RANGE_MULTIPLIER;
+    public static int RANGE_MULTIPLIER;
 
-    public int WIN_POINTS;
-    public int DEATH_POINTS;
+    public static int WIN_POINTS;
+    public static int DEATH_POINTS;
 
-    public int RESPAWN_TIME;
+    public static int RESPAWN_TIME;
+
+    public static int SMALL_MAP_PLAYERS;
+
+    public static int WIN_LESS_PLAYERS;
+    public static int WIN_LESS_PLAYERS_KILLS;
+    public static int WIN_DEFAULT_KILLS;
 
     upgradesGui upgradesGui = new upgradesGui(this);
 
@@ -347,6 +353,12 @@ public class JustGuns extends Minigame implements Listener {
         RANGE_MULTIPLIER = this.getConfig().getInt("rangeMultiplier");
 
         RESPAWN_TIME = this.getConfig().getInt("respawnTime");
+
+        SMALL_MAP_PLAYERS = this.getConfig().getInt("smallMap");
+
+        WIN_LESS_PLAYERS = this.getConfig().getInt("lessPlayers");
+        WIN_LESS_PLAYERS_KILLS = this.getConfig().getInt("lessPlayersKills");
+        WIN_DEFAULT_KILLS = this.getConfig().getInt("defaultKills");
     }
 
 }
