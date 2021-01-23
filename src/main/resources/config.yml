@@ -24,6 +24,11 @@ defaultRange: 1
 maxDmg: 5
 maxRange: 3
 
+### Upgrades
+baseDmgCost: 100
+dmgUpgradeMultiplier: 5
+baseRangeCost: 50
+rangeUpgradeMultiplier: 3
 
 ### Multipliers
 
