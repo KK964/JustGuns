@@ -4,8 +4,6 @@ import net.justminecraft.minigames.minigamecore.worldbuffer.WorldBuffer;
 import org.bukkit.Location;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Map {
     public void placeSchematic(WorldBuffer w, Location l, String key) {

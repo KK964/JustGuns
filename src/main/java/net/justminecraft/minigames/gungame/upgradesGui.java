@@ -16,12 +16,9 @@ import java.util.List;
 
 public class upgradesGui implements Listener {
 
-    private final JustGuns plugin;
-
     public Inventory inv;
 
     public upgradesGui(JustGuns plugin) {
-        this.plugin = plugin;
         inv = Bukkit.createInventory(null, 9, ChatColor.GOLD + "Upgrades!");
     }
 
@@ -51,14 +48,13 @@ public class upgradesGui implements Listener {
         boolean isMax = isMax(type, level);
         if(isMax) color = 14;
         if(!canBuy(type,level,p)) color = 14;
-        ItemStack res = new ItemStack(Material.STAINED_GLASS_PANE, 1, color);
-        return res;
+        return new ItemStack(Material.STAINED_GLASS_PANE, 1, color);
     }
 
     public String loreTwo(String type, int level, Player p) {
         String res = "Upgrade to level " + (level + 1) + " for " + itemCost(type, level);
         if(!canBuy(type, level, p)) {
-            res = type + " costs too much!";
+            res = type + " costs too much! (" + itemCost(type, level) + " points)";
         }
         if(isMax(type, level)) {
             res = type + " is maxed out!";
@@ -68,24 +64,24 @@ public class upgradesGui implements Listener {
 
     public boolean isMax(String type, int level) {
         boolean res = false;
-            if(type == "dmg") {
-                if(level >= plugin.MAX_DAMAGE) res = true;
+            if(type.equals("dmg")) {
+                if(level >= JustGuns.MAX_DAMAGE) res = true;
             }
-            if(type == "range") {
-                if(level >= plugin.MAX_RANGE) res = true;
+            if(type.equals("range")) {
+                if(level >= JustGuns.MAX_RANGE) res = true;
             }
         return res;
     }
 
     public double itemCost(String type, int level) {
         double cost = 0;
-        if(type == "dmg") {
-            cost = plugin.DAMAGE_BASE_COST;
-            cost = cost + (level * plugin.DAMAGE_UPGRADE_MULTIPLIER);
+        if(type.equals("dmg")) {
+            cost = JustGuns.DAMAGE_BASE_COST;
+            cost = cost + (level * JustGuns.DAMAGE_UPGRADE_MULTIPLIER);
         }
-        if(type == "range") {
-            cost = plugin.RANGE_BASE_COST;
-            cost = cost + (level * plugin.RANGE_UPGRADE_MULTIPLIER);
+        if(type.equals("range")) {
+            cost = JustGuns.RANGE_BASE_COST;
+            cost = cost + (level * JustGuns.RANGE_UPGRADE_MULTIPLIER);
         }
         return cost;
     }

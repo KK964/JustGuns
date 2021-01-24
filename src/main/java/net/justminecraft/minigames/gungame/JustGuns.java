@@ -1,6 +1,5 @@
 package net.justminecraft.minigames.gungame;
 
-import net.justminecraft.minigames.minigamecore.ActionBar;
 import net.justminecraft.minigames.minigamecore.Game;
 import net.justminecraft.minigames.minigamecore.MG;
 import net.justminecraft.minigames.minigamecore.Minigame;
@@ -24,7 +23,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
-import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.util.Arrays;
@@ -63,6 +61,7 @@ public class JustGuns extends Minigame implements Listener {
 
     upgradesGui upgradesGui = new upgradesGui(this);
 
+    @Override
     public void onEnable() {
         DATA_FOLDER = getDataFolder();
         initConfigs();
@@ -71,6 +70,7 @@ public class JustGuns extends Minigame implements Listener {
         getLogger().info("JustGuns Enabled");
     }
 
+    @Override
     public void onDisable() {
         getLogger().info("JustGuns Disabled");
     }
@@ -157,7 +157,6 @@ public class JustGuns extends Minigame implements Listener {
         Player p = e.getEntity();
         Game g = MG.core().getGame(p);
         if (g != null && g.minigame == this) {
-            JustGunsGame jg = (JustGunsGame) g;
             g.broadcastRaw(e.getDeathMessage());
             p.closeInventory();
         }
@@ -332,7 +331,6 @@ public class JustGuns extends Minigame implements Listener {
     private void initConfigs() {
         saveDefaultConfig();
         SCHEMATIC_FOLDER = new File (DATA_FOLDER.getPath() + System.getProperty("file.separator") + "schematics");
-        SCHEMATIC_FOLDER.mkdir();
 
         MIN_PLAYERS = this.getConfig().getInt("minPlayers");
         MAX_PLAYERS = this.getConfig().getInt("maxPlayers");

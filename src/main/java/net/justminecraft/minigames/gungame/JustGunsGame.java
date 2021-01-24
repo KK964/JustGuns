@@ -1,6 +1,5 @@
 package net.justminecraft.minigames.gungame;
 
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import net.justminecraft.minigames.minigamecore.ActionBar;
 import net.justminecraft.minigames.minigamecore.Game;
 import net.justminecraft.minigames.minigamecore.MG;
@@ -21,8 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class JustGunsGame extends Game {
-    public int taskId = 0;
-    private JustGuns justguns;
+    private final JustGuns justguns;
 
     Scoreboard scoreboard;
     HashMap<Player, Double> playerScore = new HashMap<>();
@@ -58,6 +56,7 @@ public class JustGunsGame extends Game {
         return maps.get((int) (Math.random() * maps.size()));
     }
 
+    @Override
     public void onPlayerDeath(Player p) {
         p.setVelocity(new Vector(0, 0, 0));
         p.setHealth(20);
@@ -75,6 +74,7 @@ public class JustGunsGame extends Game {
         }
     }
 
+    @Override
     public boolean isGameOver() {
         boolean over = false;
         int killsNeeded = neededKills();
@@ -122,9 +122,9 @@ public class JustGunsGame extends Game {
     }
 
     public void updateActionBar(Player p) {
-        double KillSteak = killStreak.get(p);
+        double KillStreak = killStreak.get(p);
         double scoreMultiplier = getMultiplier(p);
-        ActionBar killStreakMulti = new ActionBar(ChatColor.GREEN + "Points Multiplier: " + ChatColor.UNDERLINE.toString() + ChatColor.DARK_GREEN + scoreMultiplier);
+        ActionBar killStreakMulti = new ActionBar(ChatColor.RED + "Kill Streak: " + ChatColor.DARK_RED + ChatColor.UNDERLINE.toString() + KillStreak + ChatColor.RESET + ChatColor.GREEN + " Points Multiplier: " + ChatColor.UNDERLINE.toString() + ChatColor.DARK_GREEN + scoreMultiplier);
         updateExperience(p);
         killStreakMulti.send(p);
     }
@@ -139,8 +139,7 @@ public class JustGunsGame extends Game {
         double KillSteak = killStreak.get(p);
         if(KillSteak == 0) return 1;
         if(KillSteak > 9) return 2;
-        double multi = 1 + (KillSteak / 10);
-        return multi;
+        return 1 + (KillSteak / 10);
     }
 
     public void addScore(Player p) {
@@ -152,8 +151,8 @@ public class JustGunsGame extends Game {
 
     public void setPlayer(Player p) {
         playerKills.put(p, 0);
-        playerScore.put(p, Double.valueOf(0));
-        killStreak.put(p, Double.valueOf(0));
+        playerScore.put(p, (double) 0);
+        killStreak.put(p, (double) 0);
     }
 
     public void addKillStreak(Player p) {
@@ -163,6 +162,6 @@ public class JustGunsGame extends Game {
     }
 
     public void resetKills(Player p) {
-        killStreak.replace(p, Double.valueOf(0));
+        killStreak.replace(p, (double) 0);
     }
 }
