@@ -23,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -341,6 +342,9 @@ public class JustGuns extends Minigame implements Listener {
     private void initConfigs() {
         saveDefaultConfig();
         SCHEMATIC_FOLDER = new File (DATA_FOLDER.getPath() + System.getProperty("file.separator") + "schematics");
+        if (!new File(SCHEMATIC_FOLDER, "README.txt").exists()) {
+            saveResource("README.txt", false);
+        }
 
         MIN_PLAYERS = this.getConfig().getInt("minPlayers");
         MAX_PLAYERS = this.getConfig().getInt("maxPlayers");
