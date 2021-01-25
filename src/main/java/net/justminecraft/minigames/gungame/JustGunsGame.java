@@ -14,6 +14,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.Vector;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -26,6 +27,7 @@ public class JustGunsGame extends Game {
     HashMap<Player, Double> playerScore = new HashMap<>();
     HashMap<Player, Double> killStreak = new HashMap<>();
     HashMap<Player, Integer> playerKills = new HashMap<>();
+    ArrayList<Location> spawnLocations = new ArrayList<>();
 
     public JustGunsGame(Minigame mg) {
         super(mg, false);
@@ -34,26 +36,34 @@ public class JustGunsGame extends Game {
     }
 
     public String getMapSize(int p) {
+        if(p <= 2) return "micro";
         if(p < JustGuns.SMALL_MAP_PLAYERS) return "small";
         if(p > JustGuns.SMALL_MAP_PLAYERS) return "large";
         return "small";
     }
 
     public String getRandomMap(Game game) {
-        ArrayList<String> maps = new ArrayList<>();
-        String size = getMapSize(game.players.size());
-        for(File fileEntry : JustGuns.SCHEMATIC_FOLDER.listFiles()) {
-            if(fileEntry.isFile()) {
-                String FileName = fileEntry.getName();
-                String regex = "(" + size + ")_\\w+\\.schematic";
-                Pattern p = Pattern.compile(regex);
-                Matcher m = p.matcher(FileName);
-                if(m.find()) {
-                    maps.add(FileName);
+        try {
+            ArrayList<String> maps = new ArrayList<>();
+            String size = getMapSize(game.players.size());
+            for(File fileEntry : JustGuns.SCHEMATIC_FOLDER.listFiles()) {
+                if(fileEntry.isFile()) {
+                    String FileName = fileEntry.getName();
+                    String regex = "(" + size + ")_\\w+\\.schematic";
+                    Pattern p = Pattern.compile(regex);
+                    Matcher m = p.matcher(FileName);
+                    if(m.find()) {
+                        maps.add(FileName);
+                    }
                 }
             }
+            if(maps.size() == 0) new IOException("Schematic File is missing a \"" + size + "\" Size map.");
+            return maps.get((int) (Math.random() * maps.size()));
+        } catch(Exception e) {
+            e.printStackTrace();
         }
-        return maps.get((int) (Math.random() * maps.size()));
+        return null;
+    }
     }
 
     @Override
