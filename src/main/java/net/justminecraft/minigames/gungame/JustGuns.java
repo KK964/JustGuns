@@ -25,6 +25,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -197,7 +198,13 @@ public class JustGuns extends Minigame implements Listener {
         kills.getScore(" ").setScore(2);
         kills.getScore(ChatColor.YELLOW + "justminecraft.net").setScore(1);
 
+        ArrayList<Location> spawnLoc = new ArrayList<>(g.spawnLocations);
+
         for(Player p : g.players) {
+            Location playerSpawn = spawnLoc.get((int) (Math.random() * spawnLoc.size()));
+            Vector lookDirection = g.getLookDirection(playerSpawn, new Location(g.world, 0, playerSpawn.getY(), 0));
+            playerSpawn.setDirection(lookDirection);
+            playerSpawn.setWorld(g.world);
             g.setPlayer(p);
             g.updateScore(p);
             giveGun(p, DEFAULT_DAMAGE, DEFAULT_RANGE);
@@ -205,7 +212,8 @@ public class JustGuns extends Minigame implements Listener {
             p.setScoreboard(g.scoreboard);
             p.setExp(0);
             p.setLevel(0);
-            p.teleport(new Location(g.world, 0, 64, 0));
+            p.teleport(playerSpawn);
+            spawnLoc.remove(playerSpawn);
         }
     }
 
@@ -223,7 +231,7 @@ public class JustGuns extends Minigame implements Listener {
         g.disableHunger = true;
         Map m = new Map();
         Location l = new Location(g.world, 0, 64, 0);
-        m.placeSchematic(w, l, map);
+        m.placeSchematic(w, l, map, g);
         //generate world with schem and barriers
     }
 

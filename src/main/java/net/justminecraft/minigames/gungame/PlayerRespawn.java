@@ -7,7 +7,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
+
+import java.util.ArrayList;
 
 public class PlayerRespawn implements Runnable {
     private final JustGuns plugin;
@@ -25,11 +29,24 @@ public class PlayerRespawn implements Runnable {
     public void run() {
         if(seconds == 0) {
             Game g = MG.core().getGame(player);
-            Location spawnLocation = new Location(g.world,0, 64, 0);//unknown
-            while (spawnLocation.getBlock().getType() != Material.AIR) {
-                spawnLocation = spawnLocation.add(0,1,0);
+            JustGunsGame game = (JustGunsGame) g;
+            Location spawnLocation;
+
+            ArrayList<Location> spawnLoc = new ArrayList<>(game.spawnLocations);
+            for(Location possibleLoc : spawnLoc) {
+                possibleLoc.setWorld(game.world);
+                for(Entity ent : possibleLoc.getWorld().getNearbyEntities(possibleLoc, 5, 5, 5)) {
+                    if(ent instanceof Player && ((Player) ent).getGameMode() != GameMode.SPECTATOR) spawnLoc.remove(possibleLoc);
+                }
+            }
+            if(spawnLoc.size() > 0) {
+                spawnLocation = spawnLoc.get((int) (Math.random() * spawnLoc.size()));
+            } else {
+                spawnLocation = game.spawnLocations.get((int) (Math.random() * game.spawnLocations.size()));
             }
 
+            Vector lookDirection = game.getLookDirection(spawnLocation, new Location(g.world, 0, spawnLocation.getY(), 0));
+            spawnLocation.setDirection(lookDirection);
             player.teleport(spawnLocation);
             player.setGameMode(GameMode.SURVIVAL);
             return;
