@@ -64,6 +64,10 @@ public class JustGunsGame extends Game {
         }
         return null;
     }
+
+    public Vector getLookDirection(Location loc, Location loc2) {
+        loc2.add(0.5, 0, 0.5);
+        return loc2.toVector().subtract(loc.toVector());
     }
 
     @Override
@@ -74,6 +78,7 @@ public class JustGunsGame extends Game {
         p.setGameMode(GameMode.SPECTATOR);
         resetKills(p);
         updateExperience(p);
+        updateScore(p);
         if (p.getLocation().getY() < 30) {
             p.teleport(new Location(p.getWorld(), 0, 90, 0, 135, 45));
         }
