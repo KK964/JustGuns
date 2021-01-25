@@ -34,3 +34,7 @@ rangeUpgradeMultiplier: 20
 
 ### Multipliers
 rangeMultiplier: 20
+
+
+## Other
+testingMode: false # if true game continues if only 1 player.

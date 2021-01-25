@@ -81,6 +81,11 @@ public class JustGunsGame extends Game {
         for(Player p : players) {
             if(playerKills.get(p) >= killsNeeded) over = true;
         }
+        int playersNeeded = 2;
+        if(JustGuns.TESTING_MODE) {
+            playersNeeded = 1;
+        }
+        if(players.size() < playersNeeded) over = true;
         return over;
     }
 

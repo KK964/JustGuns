@@ -59,6 +59,8 @@ public class JustGuns extends Minigame implements Listener {
     public static int WIN_LESS_PLAYERS_KILLS;
     public static int WIN_DEFAULT_KILLS;
 
+    public static boolean TESTING_MODE = false;
+
     upgradesGui upgradesGui = new upgradesGui(this);
 
     @Override
@@ -357,6 +359,8 @@ public class JustGuns extends Minigame implements Listener {
         WIN_LESS_PLAYERS = this.getConfig().getInt("lessPlayers");
         WIN_LESS_PLAYERS_KILLS = this.getConfig().getInt("lessPlayersKills");
         WIN_DEFAULT_KILLS = this.getConfig().getInt("defaultKills");
+
+        TESTING_MODE = this.getConfig().getBoolean("testingMode");
     }
 
 }
