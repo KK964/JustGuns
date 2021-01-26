@@ -24,6 +24,7 @@ public class JustGunsGame extends Game {
     private final JustGuns justguns;
 
     Scoreboard scoreboard;
+    int neededKills;
     HashMap<Player, Double> playerScore = new HashMap<>();
     HashMap<Player, Double> killStreak = new HashMap<>();
     HashMap<Player, Integer> playerKills = new HashMap<>();
