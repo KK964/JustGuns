@@ -349,7 +349,7 @@ public class JustGuns extends Minigame implements Listener {
     private void initConfigs() {
         saveDefaultConfig();
         SCHEMATIC_FOLDER = new File (DATA_FOLDER.getPath() + System.getProperty("file.separator") + "schematics");
-        if (!new File(SCHEMATIC_FOLDER, "README.txt").exists()) {
+        if (!new File(DATA_FOLDER, "README.txt").exists()) {
             saveResource("README.txt", false);
         }
 
