@@ -6,7 +6,6 @@ import net.justminecraft.minigames.titleapi.TitleAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -33,7 +32,8 @@ public class PlayerRespawn implements Runnable {
             Location spawnLocation;
 
             ArrayList<Location> spawnLoc = new ArrayList<>(game.spawnLocations);
-            for(Location possibleLoc : spawnLoc) {
+            ArrayList<Location> spawnLoc2 = new ArrayList<>(game.spawnLocations);
+            for(Location possibleLoc : spawnLoc2) {
                 possibleLoc.setWorld(game.world);
                 for(Entity ent : possibleLoc.getWorld().getNearbyEntities(possibleLoc, 5, 5, 5)) {
                     if(ent instanceof Player && ((Player) ent).getGameMode() != GameMode.SPECTATOR) spawnLoc.remove(possibleLoc);

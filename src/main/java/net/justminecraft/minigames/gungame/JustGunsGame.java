@@ -83,11 +83,7 @@ public class JustGunsGame extends Game {
         if (p.getLocation().getY() < 30) {
             p.teleport(new Location(p.getWorld(), 0, 90, 0, 135, 45));
         }
-        if(isGameOver()) {
-            endGame();
-        } else {
-            new PlayerRespawn((JustGuns) minigame, p);
-        }
+        if(!isGameOver()) new PlayerRespawn((JustGuns) minigame, p);
     }
 
     @Override
