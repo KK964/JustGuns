@@ -202,7 +202,7 @@ public class JustGuns extends Minigame implements Listener {
         kills.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         kills.getScore("  ").setScore(5);
-        kills.getScore(ChatColor.GRAY + ChatColor.UNDERLINE.toString() + "Kills (win =" + g.neededKills + " ):").setScore(4);
+        kills.getScore(ChatColor.GRAY + ChatColor.UNDERLINE.toString() + "Kills (win:" + g.neededKills + "):").setScore(4);
         kills.getScore(" ").setScore(2);
         kills.getScore(ChatColor.YELLOW + "justminecraft.net").setScore(1);
 
