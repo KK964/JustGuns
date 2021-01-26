@@ -195,16 +195,16 @@ public class JustGuns extends Minigame implements Listener {
         g.world.setGameRuleValue("naturalRegeneration", "false");
         g.world.setGameRuleValue("keepInventory", "true");
 
+        g.neededKills = g.neededKills();
+
         Objective kills = g.scoreboard.registerNewObjective("kills", "dummy");
         kills.setDisplayName(ChatColor.YELLOW + ChatColor.BOLD.toString() + "GUNS");
         kills.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         kills.getScore("  ").setScore(5);
-        kills.getScore(ChatColor.GRAY + ChatColor.UNDERLINE.toString() + "Kills:").setScore(4);
+        kills.getScore(ChatColor.GRAY + ChatColor.UNDERLINE.toString() + "Kills (win =" + g.neededKills + " ):").setScore(4);
         kills.getScore(" ").setScore(2);
         kills.getScore(ChatColor.YELLOW + "justminecraft.net").setScore(1);
-
-        g.neededKills = g.neededKills();
 
         ArrayList<Location> spawnLoc = new ArrayList<>(g.spawnLocations);
 
