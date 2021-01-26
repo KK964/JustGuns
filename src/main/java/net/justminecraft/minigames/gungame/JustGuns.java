@@ -157,7 +157,7 @@ public class JustGuns extends Minigame implements Listener {
             jg.updateScore(p);
             jg.updateActionBar(p);
             jg.addKillStreak(p);
-            if(jg.isGameOver()) jg.endGame();
+            if(jg.gameOver()) jg.endGame();
         }
     }
 

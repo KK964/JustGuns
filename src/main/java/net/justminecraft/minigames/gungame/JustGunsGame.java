@@ -1,9 +1,6 @@
 package net.justminecraft.minigames.gungame;
 
-import net.justminecraft.minigames.minigamecore.ActionBar;
-import net.justminecraft.minigames.minigamecore.Game;
-import net.justminecraft.minigames.minigamecore.MG;
-import net.justminecraft.minigames.minigamecore.Minigame;
+import net.justminecraft.minigames.minigamecore.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -83,11 +80,10 @@ public class JustGunsGame extends Game {
         if (p.getLocation().getY() < 30) {
             p.teleport(new Location(p.getWorld(), 0, 90, 0, 135, 45));
         }
-        if(!isGameOver()) new PlayerRespawn((JustGuns) minigame, p);
+        if(!gameOver()) new PlayerRespawn((JustGuns) minigame, p);
     }
 
-    @Override
-    public boolean isGameOver() {
+    public boolean gameOver() {
         boolean over = false;
         for(Player p : players) {
             if(playerKills.get(p) >= neededKills) over = true;
@@ -108,7 +104,6 @@ public class JustGunsGame extends Game {
                 playerLeave(p);
             }
         }
-        finishGame();
     }
 
     public Player getWinner() {
