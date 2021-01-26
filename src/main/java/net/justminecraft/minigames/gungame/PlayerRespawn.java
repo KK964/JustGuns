@@ -29,8 +29,9 @@ public class PlayerRespawn implements Runnable {
         if(seconds == 0) {
             Game g = MG.core().getGame(player);
             JustGunsGame game = (JustGunsGame) g;
+            if(g == null || g.minigame != plugin) return;
+            
             Location spawnLocation;
-
             ArrayList<Location> spawnLoc = new ArrayList<>(game.spawnLocations);
             ArrayList<Location> spawnLoc2 = new ArrayList<>(game.spawnLocations);
             for(Location possibleLoc : spawnLoc2) {
