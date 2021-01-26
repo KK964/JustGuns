@@ -63,6 +63,10 @@ public class JustGuns extends Minigame implements Listener {
 
     public static boolean TESTING_MODE = false;
 
+    public static String TINY_MAPS_STRING;
+    public static String SMALL_MAPS_STRING;
+    public static String LARGE_MAPS_STRING;
+
     upgradesGui upgradesGui = new upgradesGui(this);
 
     @Override
@@ -153,6 +157,7 @@ public class JustGuns extends Minigame implements Listener {
             jg.updateScore(p);
             jg.updateActionBar(p);
             jg.addKillStreak(p);
+            if(jg.isGameOver()) jg.endGame();
         }
     }
 
@@ -198,6 +203,8 @@ public class JustGuns extends Minigame implements Listener {
         kills.getScore(ChatColor.GRAY + ChatColor.UNDERLINE.toString() + "Kills:").setScore(4);
         kills.getScore(" ").setScore(2);
         kills.getScore(ChatColor.YELLOW + "justminecraft.net").setScore(1);
+
+        g.neededKills = g.neededKills();
 
         ArrayList<Location> spawnLoc = new ArrayList<>(g.spawnLocations);
 
@@ -373,6 +380,10 @@ public class JustGuns extends Minigame implements Listener {
         WIN_DEFAULT_KILLS = this.getConfig().getInt("defaultKills");
 
         TESTING_MODE = this.getConfig().getBoolean("testingMode");
+
+        TINY_MAPS_STRING = this.getConfig().getString("tinyMaps");
+        SMALL_MAPS_STRING = this.getConfig().getString("smallMaps");
+        LARGE_MAPS_STRING = this.getConfig().getString("largeMaps");
     }
 
 }

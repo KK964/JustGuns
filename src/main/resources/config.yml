@@ -3,7 +3,14 @@
 ## Game Config
 
 ### Maps
-smallMap: 5 # if players <= smallMap use small maps else large
+smallMap: 5 # if players <= smallMap use small maps else large.
+
+# sizing (<size>_<map_name>.schematic)
+tinyMaps: micro
+smallMaps: small
+largeMaps: large
+# 1 on 1 maps is set to 2 players, and cannot be changed.
+# If you want all maps to use the same sizing, set the string to be the same.
 
 ### Win
 lessPlayers: 2

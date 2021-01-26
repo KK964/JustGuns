@@ -36,10 +36,10 @@ public class JustGunsGame extends Game {
     }
 
     public String getMapSize(int p) {
-        if(p <= 2) return "micro";
-        if(p < JustGuns.SMALL_MAP_PLAYERS) return "small";
-        if(p > JustGuns.SMALL_MAP_PLAYERS) return "large";
-        return "small";
+        if(p <= 2) return JustGuns.TINY_MAPS_STRING;
+        if(p < JustGuns.SMALL_MAP_PLAYERS) return JustGuns.SMALL_MAPS_STRING;
+        if(p > JustGuns.SMALL_MAP_PLAYERS) return JustGuns.LARGE_MAPS_STRING;
+        return JustGuns.SMALL_MAPS_STRING;
     }
 
     public String getRandomMap(Game game) {
@@ -92,9 +92,8 @@ public class JustGunsGame extends Game {
     @Override
     public boolean isGameOver() {
         boolean over = false;
-        int killsNeeded = neededKills();
         for(Player p : players) {
-            if(playerKills.get(p) >= killsNeeded) over = true;
+            if(playerKills.get(p) >= neededKills) over = true;
         }
         int playersNeeded = 2;
         if(JustGuns.TESTING_MODE) {
@@ -106,7 +105,8 @@ public class JustGunsGame extends Game {
 
     public void endGame() {
         Player winner = getWinner();
-        for(Player p : players) {
+        ArrayList<Player> toKick = new ArrayList<>(players);
+        for(Player p : toKick) {
             if(p != winner) {
                 playerLeave(p);
             }
@@ -116,9 +116,8 @@ public class JustGunsGame extends Game {
 
     public Player getWinner() {
         Player p = null;
-        int killsNeeded = neededKills();
         for(Player player : players) {
-            if(playerKills.get(player) >= killsNeeded) p = player;
+            if(playerKills.get(player) >= neededKills) p = player;
         }
         return p;
     }
