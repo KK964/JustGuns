@@ -6,6 +6,7 @@ import net.justminecraft.minigames.minigamecore.MG;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -41,16 +42,19 @@ public class Reload implements Runnable {
                 ActionBar reloaded = new ActionBar(ChatColor.GREEN + "Reloaded!");
                 reloaded.send(player);
                 game.reloading.remove(player);
+                player.playSound(player.getLocation(), Sound.NOTE_PLING, 2, 0.5f);
                 return;
             }
             ActionBar timeLeft = new ActionBar(ChatColor.GREEN + "Reloading in " + seconds + " second" + (seconds == 1 ? "" : "s") + "...");
             timeLeft.send(player);
             seconds--;
+            player.playSound(player.getLocation(), Sound.CLICK, 2, 0.5f);
             plugin.getServer().getScheduler().runTaskLater(plugin, this, 20);
         } else {
             ActionBar outOfAmmo = new ActionBar(ChatColor.DARK_RED + "Out Of Ammo!");
             outOfAmmo.send(player);
             game.reloading.remove(player);
+            player.playSound(player.getLocation(), Sound.NOTE_BASS_GUITAR, 2, 0.5f);
         }
     }
 

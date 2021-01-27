@@ -130,6 +130,7 @@ public class JustGuns extends Minigame implements Listener {
                                 }
                                 for(Entity ent : loc.getWorld().getNearbyEntities(loc, 0.2, 0.2, 0.2)) {
                                     if(ent != p && ent.getType().isAlive()) {
+                                        p.playSound(p.getLocation(), Sound.BLAZE_HIT, 2, 0.5f);
                                         if(ent instanceof Player) {
                                             Player player = (Player) ent;
                                             player.damage(dmg, p);
@@ -142,7 +143,7 @@ public class JustGuns extends Minigame implements Listener {
                                 }
                             }
                         }
-                        p.getLocation().getWorld().playSound(p.getLocation(), Sound.IRONGOLEM_HIT, 2, 0.5f);
+                        p.getLocation().getWorld().playSound(p.getLocation(), Sound.IRONGOLEM_HIT, 50, 5);
                         Ammo.removeAmmo(p);
                     } else {
                         JustGunsGame jg = (JustGunsGame) g;
