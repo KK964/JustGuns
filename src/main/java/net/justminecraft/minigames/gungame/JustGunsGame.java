@@ -25,6 +25,9 @@ public class JustGunsGame extends Game {
     HashMap<Player, Double> playerScore = new HashMap<>();
     HashMap<Player, Double> killStreak = new HashMap<>();
     HashMap<Player, Integer> playerKills = new HashMap<>();
+    HashMap<Player, Integer> playerAmmo = new HashMap<>();
+    HashMap<Player, Integer> playerClips = new HashMap<>();
+    ArrayList<Player> reloading = new ArrayList<>();
     ArrayList<Location> spawnLocations = new ArrayList<>();
 
     public JustGunsGame(Minigame mg) {
@@ -77,6 +80,14 @@ public class JustGunsGame extends Game {
         resetKills(p);
         updateExperience(p);
         updateScore(p);
+        if (p.getKiller() instanceof Player) {
+            Player killer = p.getKiller();
+            Game g1 = MG.core().getGame(killer);
+            Game g2 = MG.core().getGame(p);
+            if(g1 != null && g1.minigame == justguns && g1.minigame == g2.minigame) {
+                justguns.Ammo.addReceivedAmmo(killer, justguns.Ammo.getAmmo(p), justguns.Ammo.getClips(p));
+            }
+        }
         if (p.getLocation().getY() < 30) {
             p.teleport(new Location(p.getWorld(), 0, 90, 0, 135, 45));
         }

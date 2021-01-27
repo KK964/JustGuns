@@ -33,6 +33,10 @@ defaultRange: 1
 maxDmg: 5
 maxRange: 3
 
+baseAmmo: 20
+baseClips: 4
+reloadTime: 5
+
 ### Upgrades
 baseDmgCost: 100
 baseRangeCost: 50

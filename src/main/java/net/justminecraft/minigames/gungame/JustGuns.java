@@ -61,12 +61,17 @@ public class JustGuns extends Minigame implements Listener {
     public static int WIN_LESS_PLAYERS_KILLS;
     public static int WIN_DEFAULT_KILLS;
 
+    public static int BASE_AMMO;
+    public static int BASE_CLIPS;
+    public static int RELOAD_TIME;
+
     public static boolean TESTING_MODE = false;
 
     public static String TINY_MAPS_STRING;
     public static String SMALL_MAPS_STRING;
     public static String LARGE_MAPS_STRING;
 
+    public ammo Ammo = new ammo(this);
     upgradesGui upgradesGui = new upgradesGui(this);
 
     @Override
@@ -107,36 +112,44 @@ public class JustGuns extends Minigame implements Listener {
         if(g != null && g.minigame == this) {
             if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getClickedBlock() != null && e.getItem() != null) {
                 if(e.getItem().getType() == Material.DIAMOND_HOE && e.getItem().getItemMeta().getDisplayName().contentEquals(ChatColor.GOLD + "Gun")) {
-                    Location loc = p.getLocation();
-                    double yAdd = 1.62;
-                    if(p.isSneaking())
-                        yAdd = 1.50; //sneaking
-                    loc = loc.add(loc.getDirection().getX(),loc.getDirection().getY()+yAdd,loc.getDirection().getZ());
-                    if(loc.getBlock() == null || !loc.getBlock().getType().isSolid()) {
-                        int dmg = upgradesGui.getDamage(e.getItem());
-                        int range = upgradesGui.getRange(e.getItem()) * RANGE_MULTIPLIER;
+                    if(Ammo.getAmmo(p) > 0) {
+                        Location loc = p.getLocation();
+                        double yAdd = 1.62;
+                        if(p.isSneaking())
+                            yAdd = 1.50; //sneaking
+                        loc = loc.add(loc.getDirection().getX(),loc.getDirection().getY()+yAdd,loc.getDirection().getZ());
+                        if(loc.getBlock() == null || !loc.getBlock().getType().isSolid()) {
+                            int dmg = upgradesGui.getDamage(e.getItem());
+                            int range = upgradesGui.getRange(e.getItem()) * RANGE_MULTIPLIER;
 
-                        for(int i = 0; i < range; i++) { //total distance travel
-                            loc = loc.add(loc.getDirection().getX()/1.5, loc.getDirection().getY()/1.5, loc.getDirection().getZ()/1.5);
-                            p.getWorld().spigot().playEffect(loc, Effect.FLAME, 1, 0, 0, 0 ,0, 0, 1, 100);
-                            if(loc.getBlock() != null && loc.getBlock().getType().isSolid()) {
-                                break;
-                            }
-                            for(Entity ent : loc.getWorld().getNearbyEntities(loc, 0.2, 0.2, 0.2)) {
-                                if(ent != p && ent.getType().isAlive()) {
-                                    if(ent instanceof Player) {
-                                        Player player = (Player) ent;
-                                        player.damage(dmg, p);
-                                    } else {
-                                        ((LivingEntity) ent).damage(dmg, p);
-                                    }
-                                    i = range;
+                            for(int i = 0; i < range; i++) { //total distance travel
+                                loc = loc.add(loc.getDirection().getX()/1.5, loc.getDirection().getY()/1.5, loc.getDirection().getZ()/1.5);
+                                p.getWorld().spigot().playEffect(loc, Effect.FLAME, 1, 0, 0, 0 ,0, 0, 1, 100);
+                                if(loc.getBlock() != null && loc.getBlock().getType().isSolid()) {
                                     break;
+                                }
+                                for(Entity ent : loc.getWorld().getNearbyEntities(loc, 0.2, 0.2, 0.2)) {
+                                    if(ent != p && ent.getType().isAlive()) {
+                                        if(ent instanceof Player) {
+                                            Player player = (Player) ent;
+                                            player.damage(dmg, p);
+                                        } else {
+                                            ((LivingEntity) ent).damage(dmg, p);
+                                        }
+                                        i = range;
+                                        break;
+                                    }
                                 }
                             }
                         }
+                        p.getLocation().getWorld().playSound(p.getLocation(), Sound.IRONGOLEM_HIT, 2, 0.5f);
+                        Ammo.removeAmmo(p);
+                    } else {
+                        JustGunsGame jg = (JustGunsGame) g;
+                        if(jg.reloading.contains(p)) return;
+                        jg.reloading.add(p);
+                        new Reload(this, p, RELOAD_TIME, BASE_AMMO, BASE_CLIPS);
                     }
-                    p.getLocation().getWorld().playSound(p.getLocation(), Sound.IRONGOLEM_HIT, 2, 0.5f);
                 }
                 if(e.getItem().getType() == Material.NETHER_STAR && e.getItem().getItemMeta().getDisplayName().contentEquals(ChatColor.GOLD + "Upgrades")) {
                     openUpgradesInventory(p);
@@ -217,6 +230,7 @@ public class JustGuns extends Minigame implements Listener {
             g.updateScore(p);
             giveGun(p, DEFAULT_DAMAGE, DEFAULT_RANGE);
             giveUpgrade(p);
+            Ammo.setBaseAmmo(p);
             p.setScoreboard(g.scoreboard);
             p.setExp(0);
             p.setLevel(0);
@@ -384,6 +398,10 @@ public class JustGuns extends Minigame implements Listener {
         TINY_MAPS_STRING = this.getConfig().getString("tinyMaps");
         SMALL_MAPS_STRING = this.getConfig().getString("smallMaps");
         LARGE_MAPS_STRING = this.getConfig().getString("largeMaps");
+
+        BASE_AMMO = this.getConfig().getInt("baseAmmo");
+        BASE_CLIPS = this.getConfig().getInt("baseClips");
+        RELOAD_TIME = this.getConfig().getInt("reloadTime");
     }
 
 }
