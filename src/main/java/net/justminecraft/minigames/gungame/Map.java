@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class Map {
     public void placeSchematic(WorldBuffer w, Location l, String key, JustGunsGame g) {
@@ -30,13 +31,14 @@ public class Map {
     }
 
     private int newBlock(Location location, WorldBuffer w) {
+        Random rand = new Random();
         int block = 1;
         ArrayList<Integer> blocks = new ArrayList<>();
         blocks.add(w.getBlockAt(location.clone().add(1,0,0)));
         blocks.add(w.getBlockAt(location.clone().add(1,0,1)));
         blocks.add(w.getBlockAt(location.clone().add(-1,0,0)));
         blocks.add(w.getBlockAt(location.clone().add(0,0,-1)));
-        block = blocks.get((int) (Math.random() * blocks.size()));
+        block = blocks.get(rand.nextInt(blocks.size()));
         return block;
     }
 }

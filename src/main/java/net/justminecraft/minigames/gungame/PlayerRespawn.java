@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class PlayerRespawn implements Runnable {
     private final JustGuns plugin;
@@ -26,6 +27,7 @@ public class PlayerRespawn implements Runnable {
 
     @Override
     public void run() {
+        Random rand = new Random();
         Game g = MG.core().getGame(player);
         JustGunsGame game = (JustGunsGame) g;
         if(g == null || g.minigame != plugin) return;
@@ -40,9 +42,9 @@ public class PlayerRespawn implements Runnable {
                 }
             }
             if(spawnLoc.size() > 0) {
-                spawnLocation = spawnLoc.get((int) (Math.random() * spawnLoc.size()));
+                spawnLocation = spawnLoc.get(rand.nextInt(spawnLoc.size()));
             } else {
-                spawnLocation = game.spawnLocations.get((int) (Math.random() * game.spawnLocations.size()));
+                spawnLocation = game.spawnLocations.get(rand.nextInt(game.spawnLocations.size()));
             }
 
             Vector lookDirection = game.getLookDirection(spawnLocation, new Location(g.world, 0, spawnLocation.getY(), 0));

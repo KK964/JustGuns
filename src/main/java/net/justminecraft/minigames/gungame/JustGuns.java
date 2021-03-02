@@ -29,6 +29,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class JustGuns extends Minigame implements Listener {
 
@@ -203,6 +204,7 @@ public class JustGuns extends Minigame implements Listener {
 
     @Override
     public void startGame(Game game) {
+        Random rand = new Random();
         JustGunsGame g = (JustGunsGame) game;
         g.world.setDifficulty(Difficulty.PEACEFUL);
         g.world.setSpawnLocation(0, 64, 0);
@@ -223,7 +225,7 @@ public class JustGuns extends Minigame implements Listener {
         ArrayList<Location> spawnLoc = new ArrayList<>(g.spawnLocations);
 
         for(Player p : g.players) {
-            Location playerSpawn = spawnLoc.get((int) (Math.random() * spawnLoc.size()));
+            Location playerSpawn = spawnLoc.get(rand.nextInt(spawnLoc.size()));
             Vector lookDirection = g.getLookDirection(playerSpawn, new Location(g.world, 0, playerSpawn.getY(), 0));
             playerSpawn.setDirection(lookDirection);
             playerSpawn.setWorld(g.world);

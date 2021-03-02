@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,6 +45,7 @@ public class JustGunsGame extends Game {
     }
 
     public String getRandomMap(Game game) {
+        Random rand = new Random();
         try {
             ArrayList<String> maps = new ArrayList<>();
             String size = getMapSize(game.players.size());
@@ -59,7 +61,7 @@ public class JustGunsGame extends Game {
                 }
             }
             if(maps.size() == 0) new IOException("Schematic File is missing a \"" + size + "\" Size map.");
-            return maps.get((int) (Math.random() * maps.size()));
+            return maps.get(rand.nextInt(maps.size()));
         } catch(Exception e) {
             e.printStackTrace();
         }
